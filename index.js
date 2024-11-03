@@ -1,7 +1,7 @@
 const express = require('express');
-const cors = require('cors'); // Import the cors package
+const cors = require('cors');
 const mongoose = require('mongoose');
-const userRoutes = require('./routes/userRoutes'); // Adjust path if necessary
+const userRoutes = require('./routes/userRoutes'); // Import user routes
 require('dotenv').config();
 
 const app = express();
@@ -15,13 +15,13 @@ mongoose.connect(process.env.MONGO_URI, {
   .catch(err => console.error('MongoDB connection error:', err));
 
 // Middleware
-app.use(cors()); // Enable CORS for all origins
+app.use(cors());
 app.use(express.json());
 
 // Use user routes
-app.use('/api', userRoutes); // This line connects your user routes to /api
+app.use('/api', userRoutes); // All user routes will be prefixed with /api
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`); // Ensure this is logged correctly
+  console.log(`Server running on port ${PORT}`);
 });
