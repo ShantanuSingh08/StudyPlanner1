@@ -12,7 +12,7 @@ const registerUser = async (req, res) => {
     await user.save();
     res.status(201).json({ message: 'Registration successful' });
   } catch (error) {
-    res.status(400).json({ message: 'Registration failed' });
+    res.status(400).json({ message: 'Email Already Exists' });
   }
 };
 
