@@ -1,4 +1,4 @@
-// focusRoutes.js
+// focusTimeRoutes.js
 
 const express = require('express');
 const { saveFocusTime, getFocusTimes } = require('../controllers/focusTimeController');
