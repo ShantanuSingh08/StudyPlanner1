@@ -1,5 +1,6 @@
 // index.js
 const express = require('express');
+const cors = require('cors'); // Import the cors package
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
@@ -17,6 +18,7 @@ mongoose.connect(process.env.MONGO_URI, {
   .catch(err => console.error('MongoDB connection error:', err));
 
 // Middleware
+app.use(cors()); // Enable CORS for all origins
 app.use(express.json());
 
 // Registration endpoint
