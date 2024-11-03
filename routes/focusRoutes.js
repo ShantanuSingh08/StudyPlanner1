@@ -1,4 +1,4 @@
-//focusRoutes.js
+// focusRoutes.js
 
 const express = require('express');
 const { 
@@ -6,10 +6,11 @@ const {
   updateWeeklyFocusTime, 
   updateMonthlyFocusTime 
 } = require('../controllers/focusTimeController');
+const authMiddleware = require('../middleware/authMiddleware'); // Import the auth middleware
 const router = express.Router();
 
 // Route to update daily focus time for a user
-router.post('/update-daily-focus', async (req, res) => {
+router.post('/update-daily-focus', authMiddleware, async (req, res) => {
   const { userId, date, timeSpent } = req.body;
 
   try {
@@ -21,7 +22,7 @@ router.post('/update-daily-focus', async (req, res) => {
 });
 
 // Route to update weekly focus time for a user
-router.post('/update-weekly-focus', async (req, res) => {
+router.post('/update-weekly-focus', authMiddleware, async (req, res) => {
   const { userId, week, timeSpent } = req.body;
 
   try {
@@ -33,7 +34,7 @@ router.post('/update-weekly-focus', async (req, res) => {
 });
 
 // Route to update monthly focus time for a user
-router.post('/update-monthly-focus', async (req, res) => {
+router.post('/update-monthly-focus', authMiddleware, async (req, res) => {
   const { userId, month, timeSpent } = req.body;
 
   try {
