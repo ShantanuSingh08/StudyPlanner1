@@ -5,6 +5,15 @@ const createEventModel = require('../models/eventModel');
 const saveEvent = async (req, res) => {
   const { userId, title, start, end } = req.body;
 
+  if (!userId || !title || !start || !end) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+
+  // Ensure userId is a string and not empty
+  if (typeof userId !== 'string' || userId.trim() === '') {
+    return res.status(400).json({ message: 'Invalid userId' });
+  }
+
   try {
     const Event = createEventModel(userId); // Create the dynamic model
 
@@ -14,26 +23,6 @@ const saveEvent = async (req, res) => {
     return res.status(201).json({ message: 'Event saved successfully', data: newEvent });
   } catch (error) {
     console.error('Error saving event:', error);
-    return res.status(500).json({ message: 'Server error', error });
+    return res.status(500).json({ message: 'Server error', error: error.message });
   }
-};
-
-// Get events for a specific user
-const getEvents = async (req, res) => {
-  const { userId } = req.params;
-
-  try {
-    const Event = createEventModel(userId); // Create the dynamic model
-
-    const events = await Event.find();
-    return res.status(200).json(events);
-  } catch (error) {
-    console.error('Error retrieving events:', error);
-    return res.status(500).json({ message: 'Server error', error });
-  }
-};
-
-module.exports = {
-  saveEvent,
-  getEvents,
 };
