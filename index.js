@@ -3,6 +3,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes'); // Import user routes
 const focusTimeRoutes = require('./routes/focusTimeRoutes'); // Import focus time routes
+const eventRoutes = require('./routes/eventRoutes'); // Import event routes
 require('dotenv').config();
 
 const app = express();
@@ -15,6 +16,13 @@ mongoose.connect(process.env.MONGO_URI, {
 }).then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
+// Secondary database connection for study session events
+const eventConnection = mongoose.createConnection(process.env.EVENTS_MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+eventConnection.once('open', () => console.log('MongoDB connected for study session events'));
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -25,7 +33,14 @@ app.use('/api', userRoutes); // All user routes will be prefixed with /api
 // Use focus time routes
 app.use('/api/focus-time', focusTimeRoutes); // All focus time routes will be prefixed with /api
 
+// Use event routes
+app.use('/api/events', eventRoutes); // All event routes will be prefixed with /api/events
+
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// Export event connection for use in event models
+module.exports = { eventConnection };
