@@ -1,48 +1,14 @@
 // focusRoutes.js
 
 const express = require('express');
-const { 
-  updateDailyFocusTime, 
-  updateWeeklyFocusTime, 
-  updateMonthlyFocusTime 
-} = require('../controllers/focusTimeController');
-const authMiddleware = require('../middleware/authMiddleware'); // Import the auth middleware
+const { saveFocusTime, getFocusTimes } = require('../controllers/focusTimeController');
+
 const router = express.Router();
 
-// Route to update daily focus time for a user
-router.post('/update-daily-focus', authMiddleware, async (req, res) => {
-  const { userId, date, timeSpent } = req.body;
+// Route to save focus time
+router.post('/api/focus-time', saveFocusTime);
 
-  try {
-    await updateDailyFocusTime(userId, { date, timeSpent });
-    res.status(200).json({ message: 'Daily focus time updated successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error updating daily focus time', error: error.message });
-  }
-});
-
-// Route to update weekly focus time for a user
-router.post('/update-weekly-focus', authMiddleware, async (req, res) => {
-  const { userId, week, timeSpent } = req.body;
-
-  try {
-    await updateWeeklyFocusTime(userId, { week, timeSpent });
-    res.status(200).json({ message: 'Weekly focus time updated successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error updating weekly focus time', error: error.message });
-  }
-});
-
-// Route to update monthly focus time for a user
-router.post('/update-monthly-focus', authMiddleware, async (req, res) => {
-  const { userId, month, timeSpent } = req.body;
-
-  try {
-    await updateMonthlyFocusTime(userId, { month, timeSpent });
-    res.status(200).json({ message: 'Monthly focus time updated successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error updating monthly focus time', error: error.message });
-  }
-});
+// Route to get focus times for a specific user
+router.get('/api/focus-time/:userId', getFocusTimes);
 
 module.exports = router;
