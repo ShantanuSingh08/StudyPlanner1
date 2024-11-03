@@ -23,7 +23,7 @@ app.use(express.json());
 app.use('/api', userRoutes); // All user routes will be prefixed with /api
 
 // Use focus time routes
-app.use('/api', focusTimeRoutes); // All focus time routes will be prefixed with /api
+app.use('/api/focus-time', focusTimeRoutes); // All focus time routes will be prefixed with /api
 
 // Start server
 app.listen(PORT, () => {
