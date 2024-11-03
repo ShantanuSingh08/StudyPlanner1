@@ -1,10 +1,14 @@
 // routes/eventRoutes.js
 
 const express = require('express');
-const { createEvent, getEvents } = require('../controllers/eventController');
+const { saveEvent, getUserEvents } = require('../controllers/eventController');
+
 const router = express.Router();
 
-router.post('/', createEvent);
-router.get('/:userId', getEvents);
+// Route to save an event
+router.post('/:userId', saveEvent);
+
+// Route to get all events for a user
+router.get('/:userId', getUserEvents);
 
 module.exports = router;
