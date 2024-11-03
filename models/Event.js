@@ -1,7 +1,7 @@
 // models/Event.js
 
 const mongoose = require('mongoose');
-const { eventConnection } = require('../app'); // Import the secondary connection
+const { eventConnection } = require('../index'); // Import the secondary connection
 
 const eventSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
