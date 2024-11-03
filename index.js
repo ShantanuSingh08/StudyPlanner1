@@ -1,4 +1,3 @@
-// index.js
 const express = require('express');
 const cors = require('cors'); // Import the cors package
 const bcrypt = require('bcryptjs');
@@ -51,5 +50,5 @@ app.post('/api/login', async (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(Server running on port ${PORT});
+  console.log(`Server running on port ${PORT}`); // Fixed here
 });
