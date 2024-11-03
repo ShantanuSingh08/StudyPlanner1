@@ -31,4 +31,22 @@ const loginUser = async (req, res) => {
   }
 };
 
+const registerUser = async (req, res) => {
+  console.log('Request body:', req.body); // Log the incoming request body
+  const { email, password, name, dob, classOrCourse, school } = req.body;
+  
+  if (!email || !password || !name || !dob || !classOrCourse || !school) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ email, password: hashedPassword, name, dob, classOrCourse, school });
+    await user.save();
+    res.status(201).json({ message: 'Registration successful' });
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(400).json({ message: 'Registration failed', error: error.message });
+  }
+};
 module.exports = { registerUser, loginUser };
