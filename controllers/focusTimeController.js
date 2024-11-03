@@ -1,50 +1,46 @@
 // controllers/focusTimeController.js
 
 const FocusTime = require('../models/FocusTime');
-const moment = require('moment'); // For date handling
 
-// Function to add or update weekly focus time
-const updateWeeklyFocusTime = async (userId, newFocusTime) => {
+// Create or update focus time for a user on a specific date
+const saveFocusTime = async (req, res) => {
+  const { userId, date, timeInSeconds } = req.body;
+
   try {
-    // Get the start of the current week (Monday)
-    const weekStart = moment().startOf('isoWeek').toDate(); // ISO week starts on Monday
-
-    // Find the user's focus time record or create a new one if it doesn't exist
-    let focusTimeRecord = await FocusTime.findOne({ userId });
-
-    if (!focusTimeRecord) {
-      focusTimeRecord = new FocusTime({ 
-        userId, 
-        dailyFocusTime: [], 
-        weeklyFocusTime: [{ weekStart, timeSpent: newFocusTime }], 
-        monthlyFocusTime: [] 
-      });
+    const existingRecord = await FocusTime.findOne({ userId, date });
+    
+    if (existingRecord) {
+      // Update existing record
+      existingRecord.timeInSeconds += timeInSeconds;
+      await existingRecord.save();
+      return res.status(200).json({ message: 'Focus time updated successfully', data: existingRecord });
     } else {
-      // Check if there's an entry for the current week
-      const existingWeekIndex = focusTimeRecord.weeklyFocusTime.findIndex((entry) =>
-        moment(entry.weekStart).isSame(weekStart, 'week') // Check by week
-      );
-
-      if (existingWeekIndex >= 0) {
-        // Update the focus time for the current week if it exists
-        focusTimeRecord.weeklyFocusTime[existingWeekIndex].timeSpent += newFocusTime;
-      } else {
-        // Add a new entry for the current week
-        focusTimeRecord.weeklyFocusTime.push({ weekStart, timeSpent: newFocusTime });
-      }
+      // Create a new record
+      const newFocusTime = new FocusTime({ userId, date, timeInSeconds });
+      await newFocusTime.save();
+      return res.status(201).json({ message: 'Focus time saved successfully', data: newFocusTime });
     }
-
-    // Ensure only the last 4 weeks are stored by trimming old entries
-    if (focusTimeRecord.weeklyFocusTime.length > 4) {
-      focusTimeRecord.weeklyFocusTime = focusTimeRecord.weeklyFocusTime.slice(-4);
-    }
-
-    // Save the updated record
-    await focusTimeRecord.save();
-    console.log('Weekly focus time updated successfully');
   } catch (error) {
-    console.error('Error updating weekly focus time:', error);
+    console.error('Error saving focus time:', error);
+    return res.status(500).json({ message: 'Server error', error });
   }
 };
 
-module.exports = { updateWeeklyFocusTime };
+// Get focus time data for a specific user
+const getFocusTimes = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const focusTimes = await FocusTime.find({ userId });
+    return res.status(200).json(focusTimes);
+  } catch (error) {
+    console.error('Error retrieving focus times:', error);
+    return res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+module.exports = {
+  saveFocusTime,
+  getFocusTimes,
+};
+
