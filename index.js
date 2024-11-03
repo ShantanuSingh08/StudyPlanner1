@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
 const focusTimeRoutes = require('./routes/focusTimeRoutes');
 const eventRoutes = require('./routes/eventRoutes');
+const notesRoutes = require('./routes/notes');
 require('dotenv').config();
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use('/api', userRoutes);
 app.use('/api/focus-time', focusTimeRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/notes', notesRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
