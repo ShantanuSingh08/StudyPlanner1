@@ -10,4 +10,7 @@ router.get('/:userId', getEvents);
 // Create a new event
 router.post('/', createEvent);
 
+// Delete a new event
+router.delete('/:eventId', deleteEvent);
+
 module.exports = router;
