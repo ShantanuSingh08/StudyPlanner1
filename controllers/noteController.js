@@ -37,4 +37,4 @@ const deleteNote = async (req, res) => {
   }
 };
 
-module.exports = { getNotes, createNote };
+module.exports = { getNotes, createNote, deleteNote };
