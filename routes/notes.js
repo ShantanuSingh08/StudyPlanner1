@@ -9,4 +9,7 @@ router.get('/:userId', getNotes);
 // POST a new note
 router.post('/', createNote);
 
+// DELETE a note by ID
+router.delete('/:noteId', deleteNote);
+
 module.exports = router;
