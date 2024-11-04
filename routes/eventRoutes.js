@@ -1,6 +1,6 @@
 // routes/eventRoutes.js
 const express = require('express');
-const { getEvents, createEvent } = require('../controllers/eventController');
+const { getEvents, createEvent, deleteEvent } = require('../controllers/eventController');
 
 const router = express.Router();
 
