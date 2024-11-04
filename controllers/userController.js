@@ -31,4 +31,26 @@ const loginUser = async (req, res) => {
   }
 };
 
+// Edit user data
+const editUser = async (req, res) => {
+  const userId = req.params.id;
+  const { email, name, dob, classOrCourse, school } = req.body;
+  try {
+    // Find the user by ID and update with new data
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { email, name, dob, classOrCourse, school },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'User updated successfully', user: updatedUser });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error during update' });
+  }
+};
+
 module.exports = { registerUser, loginUser };
