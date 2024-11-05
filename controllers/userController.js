@@ -53,4 +53,20 @@ const editUser = async (req, res) => {
   }
 };
 
+// Delete user logic
+const deleteUser = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error during deletion' });
+  }
+};
+
 module.exports = { registerUser, loginUser, editUser  };
