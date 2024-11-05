@@ -12,4 +12,7 @@ router.post('/login', loginUser);
 // Edit user endpoint
 router.put('/edit/:id', editUser); 
 
+// Delete user endpoint
+router.delete('/delete/:id', deleteUser);
+
 module.exports = router;
