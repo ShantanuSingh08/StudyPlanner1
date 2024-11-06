@@ -15,4 +15,7 @@ router.put('/edit/:id', editUser);
 // Delete user endpoint
 router.delete('/delete/:id', deleteUser);
 
+// Get user data endpoint
+router.get('/user/:id', getUserData); 
+
 module.exports = router;
