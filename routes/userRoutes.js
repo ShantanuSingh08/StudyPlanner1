@@ -1,6 +1,6 @@
 // routes/userRoutes.js
 const express = require('express');
-const { registerUser, loginUser, editUser, deleteUser, getUserData, changePassword, sendOTP, verifyOTPAndChangeEmail  } = require('../controllers/userController');
+const { registerUser, loginUser, editUser, deleteUser, getUserData, changePassword, sendOTP, verifyOTPAndChangeEmail } = require('../controllers/userController');
 const router = express.Router();
 const { authMiddleware } = require('../middleware/authMiddleware'); 
 
