@@ -13,13 +13,13 @@ async function sendOtpEmail(email, otp) {
   const transporter = nodemailer.createTransport({
     service: 'gmail', 
     auth: {
-      user: 'your-email@gmail.com',
-      pass: 'your-email-password', // Use app password if 2FA enabled
+      user: 'shantanux001@gmail.com',
+      pass: 'Singh@123', // Use app password if 2FA enabled
     },
   });
 
   const mailOptions = {
-    from: 'your-email@gmail.com',
+    from: 'shantanux001@gmail.com',
     to: email,
     subject: 'Your OTP for Email Change',
     text: `Your OTP for changing email is: ${otp}`,
