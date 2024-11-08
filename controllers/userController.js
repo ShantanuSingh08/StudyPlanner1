@@ -170,7 +170,7 @@ const generateOTP = () => crypto.randomInt(100000, 999999).toString();
 };
 
 // Verify OTP and Update Email endpoint
-exports.verifyOTPAndChangeEmail = async (req, res) => {
+const verifyOTPAndChangeEmail = async (req, res) => {
   try {
     const { otp } = req.body;
     const user = await User.findById(req.user.id);
