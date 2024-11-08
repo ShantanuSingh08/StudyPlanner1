@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const User = require('../models/Users'); // User model to find user and update email
 const Otp = require('../models/otpModel'); // OTP model to store OTP requests
+require('dotenv').config();
 
 // Function to generate OTP
 function generateOtp() {
