@@ -13,7 +13,7 @@ function generateOtp() {
 // Send OTP to the provided email
 async function sendOtpEmail(email, otp) {
   const transporter = nodemailer.createTransport({
-    service: 'outlook', 
+    service: 'hotmail', 
     auth: {
       user: process.env.GMAIL_USER,
       pass: process.env.GMAIL_PASS,
