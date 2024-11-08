@@ -13,7 +13,7 @@ function generateOtp() {
 // Send OTP to the provided email
 async function sendOtpEmail(email, otp) {
   const transporter = nodemailer.createTransport({
-    service: 'gmail', 
+    service: 'outlook', 
     auth: {
       user: process.env.GMAIL_USER,
       pass: process.env.GMAIL_PASS,
@@ -21,7 +21,7 @@ async function sendOtpEmail(email, otp) {
   });
 
   const mailOptions = {
-    from: 'shantanux001@gmail.com',
+    from: 'shantanux001@outlook.com',
     to: email,
     subject: 'Your OTP for Email Change',
     text: `Your OTP for changing email is: ${otp}`,
