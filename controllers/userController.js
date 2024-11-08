@@ -143,19 +143,22 @@ const generateOTP = () => crypto.randomInt(100000, 999999).toString();
 
 // Send OTP endpoint
  const sendOTP = async (req, res) => {
+  const { newEmail, userId } = req.body;  // Accept userId directly from req.body for testing
   try {
-    const { newEmail } = req.body;
     const otp = generateOTP();
     const otpExpiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes expiration
 
-    // Save OTP and new email temporarily to user document
-    const user = await User.findById(req.user.id);
+    // Find the user by userId from req.body
+    const user = await User.findById(userId); 
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     user.tempOtp = otp;
-    user.tempOtpExpiresAt = otpExpiresAt; // Store expiration time
+    user.tempOtpExpiresAt = otpExpiresAt;
     user.tempEmail = newEmail;
     await user.save();
 
-    // Send OTP to new email
     await transporter.sendMail({
       to: newEmail,
       subject: 'Your OTP Code',
@@ -168,6 +171,7 @@ const generateOTP = () => crypto.randomInt(100000, 999999).toString();
     res.status(500).json({ error: 'Failed to send OTP' });
   }
 };
+
 
 // Verify OTP and Update Email endpoint
 const verifyOTPAndChangeEmail = async (req, res) => {
