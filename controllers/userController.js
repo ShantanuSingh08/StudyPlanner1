@@ -142,29 +142,35 @@ const transporter = nodemailer.createTransport({
 const generateOTP = () => crypto.randomInt(100000, 999999).toString();
 
 // Send OTP endpoint
- const sendOTP = async (req, res) => {
-  const { newEmail, userId } = req.body;  // Accept userId directly from req.body for testing
+const sendOTP = async (req, res) => {
+  console.log('Received request to send OTP');
+  const { newEmail, userId } = req.body;
+  
   try {
+    console.log('Generating OTP...');
     const otp = generateOTP();
-    const otpExpiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes expiration
-
-    // Find the user by userId from req.body
-    const user = await User.findById(userId); 
+    const otpExpiresAt = Date.now() + 10 * 60 * 1000;
+    
+    const user = await User.findById(userId);
     if (!user) {
+      console.log('User not found');
       return res.status(404).json({ message: 'User not found' });
     }
-
+    
+    console.log('User found, saving OTP...');
     user.tempOtp = otp;
     user.tempOtpExpiresAt = otpExpiresAt;
     user.tempEmail = newEmail;
     await user.save();
-
+    
+    console.log('Sending email to:', newEmail);
     await transporter.sendMail({
       to: newEmail,
       subject: 'Your OTP Code',
       text: `Your OTP code is ${otp}. This code will expire in 10 minutes.`,
     });
-
+    
+    console.log('OTP sent successfully');
     res.status(200).json({ message: 'OTP sent to new email address' });
   } catch (error) {
     console.error("Error sending OTP:", error);
