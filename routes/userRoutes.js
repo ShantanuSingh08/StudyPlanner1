@@ -1,6 +1,6 @@
 // routes/userRoutes.js
 const express = require('express');
-const { registerUser, loginUser, editUser, deleteUser, getUserData  } = require('../controllers/userController');
+const { registerUser, loginUser, editUser, deleteUser, getUserData, changePassword   } = require('../controllers/userController');
 const router = express.Router();
 
 // Registration endpoint
@@ -17,5 +17,8 @@ router.delete('/delete/:id', deleteUser);
 
 // Get user data endpoint
 router.get('/user/:id', getUserData); 
+
+// Change password endpoint
+router.post('/change-password', changePassword);
 
 module.exports = router;
