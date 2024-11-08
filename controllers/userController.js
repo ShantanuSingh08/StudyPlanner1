@@ -96,4 +96,34 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, editUser, deleteUser, getUserData };
+// Change password
+const changePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const token = req.headers.authorization.split(' ')[1];
+  
+  try {
+    // Verify token and retrieve user ID
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if current password matches
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Incorrect current password' });
+    }
+
+    // Hash the new password and update
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating password' });
+  }
+};
+
+module.exports = { registerUser, loginUser, editUser, deleteUser, getUserData, changePassword };
