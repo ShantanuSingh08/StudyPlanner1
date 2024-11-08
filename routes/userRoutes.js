@@ -22,7 +22,7 @@ router.get('/user/:id', getUserData);
 router.post('/change-password', changePassword);
 
 // Send OTP endpoint
-router.post('/send-otp', sendOTP);
+router.post('/sendotp', sendOTP);
 
 // Verify OTP & Change email endpoint
 router.post('/verify-otp', verifyOTPAndChangeEmail);
