@@ -129,25 +129,33 @@ const changePassword = async (req, res) => {
 };
 
 // Send OTP endpoint
+// Setup email transporter
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
-    user: 'your-email@gmail.com', // replace with your email
-    pass: 'your-email-password',  // replace with your password or app password
+    user: process.env.EMAIL_USER,  // Use environment variables for security
+    pass: process.env.EMAIL_PASS,  // Use app password if 2FA is enabled
   },
 });
-const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
+
+// Generate OTP with added security (hex string for randomness)
+const generateOTP = () => crypto.randomInt(100000, 999999).toString();
+
+// Send OTP endpoint
 exports.sendOTP = async (req, res) => {
   try {
     const { newEmail } = req.body;
     const otp = generateOTP();
+    const otpExpiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes expiration
 
-    // Save OTP to the user’s document temporarily 
+    // Save OTP and new email temporarily to user document
     const user = await User.findById(req.user.id);
     user.tempOtp = otp;
+    user.tempOtpExpiresAt = otpExpiresAt; // Store expiration time
     user.tempEmail = newEmail;
     await user.save();
 
+    // Send OTP to new email
     await transporter.sendMail({
       to: newEmail,
       subject: 'Your OTP Code',
@@ -156,6 +164,7 @@ exports.sendOTP = async (req, res) => {
 
     res.status(200).json({ message: 'OTP sent to new email address' });
   } catch (error) {
+    console.error("Error sending OTP:", error);
     res.status(500).json({ error: 'Failed to send OTP' });
   }
 };
@@ -166,17 +175,25 @@ exports.verifyOTPAndChangeEmail = async (req, res) => {
     const { otp } = req.body;
     const user = await User.findById(req.user.id);
 
+    // Validate OTP and expiration
+    if (!user.tempOtp || !user.tempOtpExpiresAt || Date.now() > user.tempOtpExpiresAt) {
+      return res.status(400).json({ error: 'OTP has expired or is invalid' });
+    }
+
     if (user.tempOtp === otp) {
-      user.email = user.tempEmail; // Update email
-      user.tempOtp = null;         // Clear OTP
-      user.tempEmail = null;       // Clear temp email
+      // Update the email and clear temp fields
+      user.email = user.tempEmail;
+      user.tempOtp = null;
+      user.tempOtpExpiresAt = null;
+      user.tempEmail = null;
       await user.save();
-      
+
       res.status(200).json({ message: 'Email updated successfully' });
     } else {
       res.status(400).json({ error: 'Invalid OTP' });
     }
   } catch (error) {
+    console.error("Error verifying OTP:", error);
     res.status(500).json({ error: 'Failed to verify OTP' });
   }
 };
