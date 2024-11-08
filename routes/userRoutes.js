@@ -2,6 +2,7 @@
 const express = require('express');
 const { registerUser, loginUser, editUser, deleteUser, getUserData, changePassword, sendOTP, verifyOTPAndChangeEmail  } = require('../controllers/userController');
 const router = express.Router();
+const { authenticateToken } = require('../middlewares/authenticateToken'); 
 
 // Registration endpoint
 router.post('/register', registerUser);
