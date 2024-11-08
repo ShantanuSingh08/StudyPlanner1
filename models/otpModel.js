@@ -13,6 +13,7 @@ const otpSchema = new mongoose.Schema({
 // TTL index to automatically delete OTP after 5 minutes (300 seconds)
 otpSchema.index({ createdAt: 1 }, { expireAfterSeconds: 300 });
 
-const Otp = mongoose.model('Otp', otpSchema);
+// Specify collection name as 'otpRecords' in the 'StudyPlanner' database
+const Otp = mongoose.model('Otp', otpSchema, 'otpRecords');
 
 module.exports = Otp;
