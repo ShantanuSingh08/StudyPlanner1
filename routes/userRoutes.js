@@ -2,7 +2,7 @@
 const express = require('express');
 const { registerUser, loginUser, editUser, deleteUser, getUserData, changePassword, sendOTP, verifyOTPAndChangeEmail  } = require('../controllers/userController');
 const router = express.Router();
-const { authMiddleware } = require('../middlewares/authMiddleware '); 
+const { authMiddleware } = require('../middleware/authMiddleware '); 
 
 // Registration endpoint
 router.post('/register', registerUser);
