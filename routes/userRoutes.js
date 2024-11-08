@@ -2,7 +2,6 @@
 const express = require('express');
 const { registerUser, loginUser, editUser, deleteUser, getUserData, changePassword, sendOTP, verifyOTPAndChangeEmail } = require('../controllers/userController');
 const router = express.Router();
-const { authMiddleware } = require('../middleware/authMiddleware');
 
 // Registration endpoint
 router.post('/register', registerUser);
@@ -23,9 +22,9 @@ router.get('/user/:id', getUserData);
 router.post('/change-password', changePassword);
 
 // Send OTP endpoint
-router.post('/send-otp', authMiddleware, sendOTP);
+router.post('/send-otp', sendOTP);
 
 // Verify OTP & Change email endpoint
-router.post('/verify-otp', authMiddleware, verifyOTPAndChangeEmail);
+router.post('/verify-otp', verifyOTPAndChangeEmail);
 
 module.exports = router;
