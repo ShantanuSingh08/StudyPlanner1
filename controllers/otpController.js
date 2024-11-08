@@ -12,15 +12,20 @@ function generateOtp() {
 
 // Send OTP to the provided email
 async function sendOtpEmail(email, otp) {
-  const transporter = nodemailer.createTransport({
-    secure: false,
-    host:'smtp-mail.outlook.com',
-    port: 465,
-    auth: {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_PASS,
-    },
-  });
+const transporter = nodemailer.createTransport({
+  host: 'smtp-mail.outlook.com',
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
+  debug: true,  // Enable debug to log SMTP communication
+});
+
 
   const mailOptions = {
     from: 'shantanux001@outlook.com',
