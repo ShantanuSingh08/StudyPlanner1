@@ -5,6 +5,7 @@ const userRoutes = require('./routes/userRoutes');
 const focusTimeRoutes = require('./routes/focusTimeRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const notesRoutes = require('./routes/notes');
+const otpRoutes = require('./routes/otpRoutes');
 require('dotenv').config();
 
 const app = express();
@@ -23,6 +24,7 @@ app.use('/api', userRoutes);
 app.use('/api/focus-time', focusTimeRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/notes', notesRoutes);
+app.use('/api/otp', otpRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
