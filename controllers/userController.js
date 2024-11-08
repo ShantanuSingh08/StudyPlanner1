@@ -181,4 +181,4 @@ exports.verifyOTPAndChangeEmail = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, editUser, deleteUser, getUserData, changePassword };
+module.exports = { registerUser, loginUser, editUser, deleteUser, getUserData, changePassword, sendOTP, verifyOTPAndChangeEmail };
