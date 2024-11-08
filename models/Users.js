@@ -28,13 +28,7 @@ const userSchema = new mongoose.Schema({
   school: {
     type: String,
     required: true,
-  },
-  tempEmail: { 
-    type: String
- },
-  tempOtp: {
-   type: String 
-  }
+  } 
 });
 
 module.exports = mongoose.model('User', userSchema);
