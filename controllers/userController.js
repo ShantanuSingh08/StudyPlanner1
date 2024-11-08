@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const User = require('../models/Users');
 const { body, validationResult } = require('express-validator');
+const { authenticateToken } = require('../middleware/authMiddleware');
 
 // Registration logic
 const registerUser = async (req, res) => {
