@@ -23,9 +23,9 @@ router.get('/user/:id', getUserData);
 router.post('/change-password', changePassword);
 
 // Send OTP endpoint
-router.post('/send-otp', authMiddleware , sendOTP);
+router.post('/send-otp', authMiddleware, sendOTP);
 
 // Verify OTP & Change email endpoint
-router.post('/verify-otp', authMiddleware , verifyOTPAndChangeEmail);
+router.post('/verify-otp', authMiddleware, verifyOTPAndChangeEmail);
 
 module.exports = router;
