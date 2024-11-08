@@ -142,7 +142,7 @@ const transporter = nodemailer.createTransport({
 const generateOTP = () => crypto.randomInt(100000, 999999).toString();
 
 // Send OTP endpoint
-exports.sendOTP = async (req, res) => {
+ const sendOTP = async (req, res) => {
   try {
     const { newEmail } = req.body;
     const otp = generateOTP();
