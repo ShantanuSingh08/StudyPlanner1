@@ -1,6 +1,6 @@
 // routes/userRoutes.js
 const express = require('express');
-const { registerUser, loginUser, editUser, deleteUser, getUserData, changePassword   } = require('../controllers/userController');
+const { registerUser, loginUser, editUser, deleteUser, getUserData, changePassword, sendOTP, verifyOTPAndChangeEmail  } = require('../controllers/userController');
 const router = express.Router();
 
 // Registration endpoint
@@ -20,5 +20,11 @@ router.get('/user/:id', getUserData);
 
 // Change password endpoint
 router.post('/change-password', changePassword);
+
+// Send OTP endpoint
+router.post('/send-otp', authenticateToken, sendOTP);
+
+// Verify OTP & Change email endpoint
+router.post('/verify-otp', authenticateToken, verifyOTPAndChangeEmail);
 
 module.exports = router;
