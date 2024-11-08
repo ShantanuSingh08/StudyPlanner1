@@ -130,4 +130,4 @@ const changePassword = async (req, res) => {
 
 
 
-module.exports = { registerUser, loginUser, editUser, deleteUser, getUserData, changePassword, sendOTP, verifyOTPAndChangeEmail };
+module.exports = { registerUser, loginUser, editUser, deleteUser, getUserData, changePassword };
