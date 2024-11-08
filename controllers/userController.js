@@ -1,7 +1,9 @@
 // controllers/userController.js
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 const User = require('../models/Users');
+const { body, validationResult } = require('express-validator');
 
 // Registration logic
 const registerUser = async (req, res) => {
@@ -123,6 +125,59 @@ const changePassword = async (req, res) => {
     res.status(200).json({ message: 'Password updated successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Error updating password' });
+  }
+};
+
+// Send OTP endpoint
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+    user: 'your-email@gmail.com', // replace with your email
+    pass: 'your-email-password',  // replace with your password or app password
+  },
+});
+const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
+exports.sendOTP = async (req, res) => {
+  try {
+    const { newEmail } = req.body;
+    const otp = generateOTP();
+
+    // Save OTP to the user’s document temporarily 
+    const user = await User.findById(req.user.id);
+    user.tempOtp = otp;
+    user.tempEmail = newEmail;
+    await user.save();
+
+    await transporter.sendMail({
+      to: newEmail,
+      subject: 'Your OTP Code',
+      text: `Your OTP code is ${otp}. This code will expire in 10 minutes.`,
+    });
+
+    res.status(200).json({ message: 'OTP sent to new email address' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to send OTP' });
+  }
+};
+
+// Verify OTP and Update Email endpoint
+exports.verifyOTPAndChangeEmail = async (req, res) => {
+  try {
+    const { otp } = req.body;
+    const user = await User.findById(req.user.id);
+
+    if (user.tempOtp === otp) {
+      user.email = user.tempEmail; // Update email
+      user.tempOtp = null;         // Clear OTP
+      user.tempEmail = null;       // Clear temp email
+      await user.save();
+      
+      res.status(200).json({ message: 'Email updated successfully' });
+    } else {
+      res.status(400).json({ error: 'Invalid OTP' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to verify OTP' });
   }
 };
 
