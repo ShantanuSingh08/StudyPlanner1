@@ -14,8 +14,8 @@ async function sendOtpEmail(email, otp) {
   const transporter = nodemailer.createTransport({
     service: 'gmail', 
     auth: {
-      user: 'shantanux001@gmail.com',
-      pass: 'Singh@123', // Use app password if 2FA enabled
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_PASS,
     },
   });
 
