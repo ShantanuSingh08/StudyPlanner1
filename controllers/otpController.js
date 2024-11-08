@@ -1,7 +1,8 @@
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-const Otp = require('../models/otpModel'); // Assuming you have a User model
+const User = require('../models/User'); // User model to find user and update email
+const Otp = require('../models/otpModel'); // OTP model to store OTP requests
 
 // Function to generate OTP
 function generateOtp() {
