@@ -13,7 +13,7 @@ function generateOtp() {
 // Send OTP to the provided email
 async function sendOtpEmail(email, otp) {
 const transporter = nodemailer.createTransport({
-  host: 'smtp-mail.outlook.com',
+  service: "gmail",
   port: 465,
   secure: true,
   auth: {
