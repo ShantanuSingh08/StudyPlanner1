@@ -62,7 +62,7 @@ async function requestOtp(req, res) {
 
 // Verify OTP and change email
 async function verifyOtp(req, res) {
-  const { otp, newEmail, userId } = req.body;
+  const { userId, otp, newEmail } = req.body;
 
   try {
     // Find OTP record based on the provided email and OTP
@@ -73,10 +73,15 @@ async function verifyOtp(req, res) {
       return res.status(400).json({ message: 'Invalid or expired OTP' });
     }
 
-    // Find user by the original email associated with the OTP
-    const user = await User.findOne({ userId: user.userId });
+    // Find user by userId
+    const user = await User.findById(userId); // Find user by the userId passed in the request
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Ensure the required fields are populated
+    if (!user.school || !user.classOrCourse || !user.dob || !user.name || !user.password) {
+      return res.status(400).json({ message: 'User data is incomplete, missing required fields' });
     }
 
     // Update the user's email to the new email
@@ -93,6 +98,7 @@ async function verifyOtp(req, res) {
     return res.status(500).json({ message: 'Internal server error' });
   }
 }
+
 
 
 module.exports = { requestOtp, verifyOtp };
