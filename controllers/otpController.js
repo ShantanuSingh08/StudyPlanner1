@@ -66,7 +66,7 @@ async function verifyOtp(req, res) {
 
   try {
     // Find OTP record
-    const otpRecord = await Otp.findOne({ email: newEmail, otp });
+    const otpRecord = await otpRecord.findOne({ email: newEmail, otp });
 
     // Check if OTP exists and is not expired (5-minute expiration)
     if (!otpRecord || new Date() - otpRecord.createdAt > 300000) {
