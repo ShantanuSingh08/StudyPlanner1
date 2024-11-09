@@ -74,7 +74,7 @@ async function verifyOtp(req, res) {
     }
 
     // Find user by the original email associated with the OTP
-    const user = await User.findOne({ userId: User.userId });
+    const user = await User.findOne({ userId: user.userId });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
