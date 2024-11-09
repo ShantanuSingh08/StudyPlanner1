@@ -62,25 +62,35 @@ async function requestOtp(req, res) {
 
 // Verify OTP and change email
 async function verifyOtp(req, res) {
-  const { userId, otp, newEmail } = req.body;
+  const { otp, newEmail } = req.body;
 
-  // Find OTP record
-  const otpRecord = await Otp.findOne({ email: newEmail, otp });
+  try {
+    // Find OTP record
+    const otpRecord = await Otp.findOne({ email: newEmail, otp });
 
-  // If OTP doesn't exist or expired
-  if (!otpRecord || new Date() - otpRecord.createdAt > 300000) {  // 5 minutes expiration
-    return res.status(400).json({ message: 'Invalid or expired OTP' });
+    // Check if OTP exists and is not expired (5-minute expiration)
+    if (!otpRecord || new Date() - otpRecord.createdAt > 300000) {
+      return res.status(400).json({ message: 'Invalid or expired OTP' });
+    }
+
+    // Find user by newEmail and update the email field
+    const user = await User.findOne({ email: otpRecord.email });
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.email = newEmail;
+    await user.save();
+
+    // Remove OTP record from the database
+    await Otp.deleteOne({ _id: otpRecord._id });
+
+    return res.status(200).json({ message: 'Email updated successfully' });
+  } catch (error) {
+    console.error('Error in verifyOtp:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
-
-  // Find user and update email
-  const user = await User.findById(userId);
-  user.email = newEmail;
-  await user.save();
-
-  // Remove OTP record from the database
-  await Otp.deleteOne({ _id: otpRecord._id });
-
-  return res.status(200).json({ message: 'Email updated successfully' });
 }
 
 module.exports = { requestOtp, verifyOtp };
