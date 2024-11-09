@@ -76,8 +76,8 @@ async function verifyOtp(req, res) {
     // Find user by newEmail and update the email field
     const user = await User.findOne({ email: otpRecord.email });
     
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+    if (!otpRecord) {
+      return res.status(400).json({ message: 'Invalid OTP or OTP expired' });
     }
 
     user.email = newEmail;
