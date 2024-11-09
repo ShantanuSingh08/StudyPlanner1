@@ -65,32 +65,34 @@ async function verifyOtp(req, res) {
   const { otp, newEmail } = req.body;
 
   try {
-    // Find OTP record
-    const otpRecord = await otpRecord.findOne({ email: newEmail, otp });
+    // Find OTP record based on the provided email and OTP
+    const otpRecord = await Otp.findOne({ email: newEmail, otp });
 
     // Check if OTP exists and is not expired (5-minute expiration)
     if (!otpRecord || new Date() - otpRecord.createdAt > 300000) {
       return res.status(400).json({ message: 'Invalid or expired OTP' });
     }
 
-    // Find user by newEmail and update the email field
+    // Find user by the original email associated with the OTP
     const user = await User.findOne({ email: otpRecord.email });
-    
-    if (!otpRecord) {
-      return res.status(400).json({ message: 'Invalid OTP or OTP expired' });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
     }
 
+    // Update the user's email to the new email
     user.email = newEmail;
     await user.save();
 
-    // Remove OTP record from the database
+    // Remove OTP record from the database after successful verification
     await Otp.deleteOne({ _id: otpRecord._id });
 
+    // Return a success message
     return res.status(200).json({ message: 'Email updated successfully' });
   } catch (error) {
     console.error('Error in verifyOtp:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 }
+
 
 module.exports = { requestOtp, verifyOtp };
